@@ -42,7 +42,7 @@ const server = app.listen(port, () => {
 });
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: true,
     methods: ["GET", "POST"],
   },
 });
