@@ -177,10 +177,10 @@ export const LoginUser = async (req, res, next) => {
 
   };
 
-
+  console.log(req.body,'test---')
   try {
     const { email, password } = req.body.data;
-
+console.log(req.body.data,"sdffffffffffffffffffffffff")
     const userExist = await User.findOne({ email });
     console.log(userExist.status, "stattussssssss")
     if (userExist) {
@@ -216,6 +216,7 @@ export const LoginUser = async (req, res, next) => {
     }
 
   } catch (error) {
+    console.log("gfgfgfgfgfgfgfgf00",error)
     res.json({ status: "failed", message: "User not registered" });
   }
 
