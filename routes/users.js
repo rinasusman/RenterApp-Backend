@@ -29,7 +29,8 @@ import {
     getbookingHome,
     getUser,
     cancelBooking,
-    getWallet
+    getWallet,
+    deleteImage
 } from '../controller/userController.js';
 import { createChat, getuserChat, findChat } from "../controller/chatController.js"
 import { Authentication } from '../middleware/auth.js';
@@ -90,5 +91,6 @@ userRoute.get('/user/:id', getUser);
 userRoute.put('/cancelbooking/:bookingId', Authentication, cancelBooking)
 userRoute.get('/ walletget', Authentication, getWallet);
 
+userRoute.delete('/deleteImage/:id',deleteImage)
 
 export default userRoute;

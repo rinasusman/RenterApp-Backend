@@ -353,8 +353,9 @@ export const SingleHomeList = async (req, res) => {
     console.log(listing, "dattttttttttttttta")
     const booking = await Booking.find({ 'item.home': itemId })
     console.log(booking, "bookingDetails::")
+    const filteredBookings=booking.filter(booking=>booking.status!=='Cancelled')
     if (listing) {
-      const bookingDetails = booking.map(booking => ({
+      const bookingDetails = filteredBookings.map(booking => ({
         startDate: booking.startDate,
         endDate: booking.endDate,
       }));
@@ -868,7 +869,9 @@ export const updateedithome = async (req, res) => {
   try {
     const { id } = req.params;
     console.log('Updating home with ID:', id);
-    const updatedHome = await Home.findByIdAndUpdate(id, { ...req.body, imageUrl: req.body.imageUrls }, { new: true });
+    const allImageUrls = [...req.body.imageUrls, ...(req.body.imageUrl || [])];
+
+    const updatedHome = await Home.findByIdAndUpdate(id, { ...req.body, imageUrl: allImageUrls}, { new: true });
 
     res.json(updatedHome);
     console.log(updatedHome, "updateHome::")
@@ -913,4 +916,23 @@ export const getWallet = async (req, res) => {
     console.log(error)
   }
 
+}
+
+
+export const deleteImage=async(req,res)=>{
+  const { id } = req.params;
+  const { imageUrl } = req.body;
+  try {
+    // Find the document by ID and update the imageUrls field
+    const updatedHome = await Home.findByIdAndUpdate(
+        id,
+        { $pull: { imageUrl: imageUrl } },
+        { new: true }
+    );
+console.log("update",updatedHome)
+    res.json(updatedHome);
+} catch (error) {
+    console.error('Error deleting image URL:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+}
 }
