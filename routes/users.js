@@ -30,7 +30,8 @@ import {
     getUser,
     cancelBooking,
     getWallet,
-    deleteImage
+    deleteImage,
+    getpdfbookingHome
 } from '../controller/userController.js';
 import { createChat, getuserChat, findChat } from "../controller/chatController.js"
 import { Authentication } from '../middleware/auth.js';
@@ -92,5 +93,6 @@ userRoute.put('/cancelbooking/:bookingId', Authentication, cancelBooking)
 userRoute.get('/ walletget', Authentication, getWallet);
 
 userRoute.delete('/deleteImage/:id',deleteImage)
+userRoute.get('/pdfbookingHost', Authentication, getpdfbookingHome);
 
 export default userRoute;

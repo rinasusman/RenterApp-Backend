@@ -936,3 +936,37 @@ console.log("update",updatedHome)
     res.status(500).json({ error: 'Internal Server Error' });
 }
 }
+
+
+
+export const getpdfbookingHome = async (req, res) => {
+  console.log("enter pdf")
+  const { user } = req;
+  const { startDateString, endDateString } = req.query;
+  console.log(startDateString, "startdate:")
+  try {
+    const userHomes = await Home.find({
+      userId: user._id,
+      status: true
+    });
+    console.log(userHomes, "userhomes::::")
+    const homeIds = userHomes.map(home => home._id);
+    console.log(homeIds, "home::::")
+
+      const bookings = await Booking.find({'item.home': { $in: homeIds },
+          bookingDate: { $gte: startDateString, $lte: endDateString },
+      }).populate({
+          path: 'item.home',
+          select: 'location title imageSrc',
+      }).populate({
+          path: 'userId',
+          select: 'name',
+      });;
+
+      console.log(bookings, "pdf:::::::")
+      res.json(bookings);
+  } catch (error) {
+      console.error("Error fetching bookings:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+  }
+}
