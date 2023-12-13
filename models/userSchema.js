@@ -23,7 +23,16 @@ const userSchema = new mongoose.Schema(
             default: true
 
         },
+        walletHistory: [
+            {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: "WalletHistory",
+            },
+          ],
     },
+    {
+        timestamps: true,
+      },
 );
 
 const User = mongoose.model('users', userSchema);

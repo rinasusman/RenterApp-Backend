@@ -6,6 +6,7 @@ import Home from '../models/homeModel.js';
 import Favorites from '../models/favoritesModel.js';
 import Booking from '../models/bookingModel.js';
 import Feedback from '../models/feedbackModel.js';
+import WalletHistory from '../models/walletHistory.js';
 
 
 
@@ -898,6 +899,11 @@ export const cancelBooking = async (req, res) => {
     const users = await User.findById({ _id: user._id });
     users.wallet += parseFloat(booking.totalPrice);
     await users.save();
+    const walletHistory = new WalletHistory({
+      userId: user._id ,
+      amount: parseFloat(booking.totalPrice),
+    });
+    await walletHistory.save();
     res.json({ message: 'Booking cancelled successfully.' });
   } catch (error) {
     console.error('Error cancelling booking:', error);
@@ -939,6 +945,7 @@ console.log("update",updatedHome)
 
 
 
+
 export const getpdfbookingHome = async (req, res) => {
   console.log("enter pdf")
   const { user } = req;
@@ -968,5 +975,18 @@ export const getpdfbookingHome = async (req, res) => {
   } catch (error) {
       console.error("Error fetching bookings:", error);
       res.status(500).json({ error: "Internal Server Error" });
+  }
+}
+
+
+export const getwalletHistory=async(req,res)=>{
+
+  try {
+    const { user } = req;
+    const history = await WalletHistory.find({ userId:user._id }).sort({ date: -1 });
+    res.json(history);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 }
